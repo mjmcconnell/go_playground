@@ -20,6 +20,8 @@ type TodoPageData struct {
 
 
 func main() {
+	STATIC_DIR := "static"
+
 	router := mux.NewRouter()
 	testRouter := router.PathPrefix("/test").Subrouter()
 
@@ -49,6 +51,11 @@ func main() {
 		urlVars := mux.Vars(request)
 		fmt.Fprintf(response, "404, could not find path: %s", urlVars["path"])
 	})
+
+	// fs := http.FileServer(http.Dir("static/"))
+ 	//    router.Handle("/static/", http.StripPrefix("/static/", fs))
+
+ 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(STATIC_DIR))))
 
 	http.ListenAndServe(":8080", router)
 }

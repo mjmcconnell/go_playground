@@ -1,10 +1,19 @@
-<h1>{{.PageTitle}}</h1>
-<ul>
-    {{range .Todos}}
-        {{if .Done}}
-            <li class="done">{{.Title}}</li>
-        {{else}}
-            <li>{{.Title}}</li>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" media="screen" />
+</head>
+<body>
+    <h1>{{.PageTitle}}</h1>
+    <ul>
+        {{range .Todos}}
+            {{if .Done}}
+                <li class="done">{{.Title}}</li>
+            {{else}}
+                <li>{{.Title}}</li>
+            {{end}}
         {{end}}
-    {{end}}
-</ul>
+    </ul>
+</body>
+</html>
