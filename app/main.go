@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
@@ -16,6 +17,11 @@ type Todo struct {
 type TodoPageData struct {
 	PageTitle string
 	Todos     []Todo
+}
+
+type User struct {
+	Name  string `json:name`
+	Email string `json:email`
 }
 
 func logging(f http.HandlerFunc) http.HandlerFunc {
@@ -47,6 +53,15 @@ func testTodo(response http.ResponseWriter, request *http.Request) {
 	tmpl.Execute(response, data)
 }
 
+func jsonView(response http.ResponseWriter, request *http.Request) {
+	bob := User{
+		Name:  "bob",
+		Email: "bob@example.com",
+	}
+	json.NewEncoder(response).Encode(bob)
+
+}
+
 func main() {
 	STATIC_DIR := "static"
 
@@ -54,6 +69,7 @@ func main() {
 	testRouter := router.PathPrefix("/test").Subrouter()
 
 	router.HandleFunc("/", logging(home))
+	router.HandleFunc("/json", logging(jsonView))
 	testRouter.HandleFunc("/todo", logging(testTodo))
 	testRouter.HandleFunc("/{path}", logging(test404))
 
