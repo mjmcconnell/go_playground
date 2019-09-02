@@ -8,15 +8,16 @@ import (
 
 func main() {
 	router := mux.NewRouter()
+	testRouter := router.PathPrefix("/test").Subrouter()
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, you've test requested: %s\n", r.URL.Path)
 	})
 
-	router.HandleFunc("/test", func(response http.ResponseWriter, request *http.Request) {
+	testRouter.HandleFunc("", func(response http.ResponseWriter, request *http.Request) {
 		fmt.Fprintf(response, "Test, %s", request.URL.Path)
 	})
-	router.HandleFunc("/test/{foo}", func(response http.ResponseWriter, request *http.Request) {
+	testRouter.HandleFunc("/{foo}", func(response http.ResponseWriter, request *http.Request) {
 		urlVars := mux.Vars(request)
 
 		fmt.Fprintf(response, "Test, %s", urlVars["foo"])
