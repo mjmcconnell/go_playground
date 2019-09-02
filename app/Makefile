@@ -6,6 +6,7 @@ install-watcher:
 .PHONY: install
 install: install-watcher
 	go get -u github.com/gorilla/mux
+	go get -u html/template
 
 .PHONY: run
 run: install
