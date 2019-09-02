@@ -5,7 +5,7 @@ services:
   web_server:
     image: golang:1.12
     volumes:
-      - ./app:/opt/app
+      - ./app:/go/src/github.com/mjmcconnell/go_playground
     ports:
       - 8080:8080
-    working_dir: /opt/app
+    working_dir: /go/src/github.com/mjmcconnell/go_playground
