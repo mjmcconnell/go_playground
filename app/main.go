@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -17,7 +18,34 @@ type TodoPageData struct {
     Todos     []Todo
 }
 
+func logging(f http.HandlerFunc) http.HandlerFunc {
+    return func(response http.ResponseWriter, request *http.Request) {
+        log.Println(request.URL.Path)
+        f(response, request)
+    }
+}
 
+func home(response http.ResponseWriter, request *http.Request) {
+	fmt.Fprintf(response, "Hello, you've test requested: %s\n", request.URL.Path)
+}
+
+func test404(response http.ResponseWriter, request *http.Request) {
+	urlVars := mux.Vars(request)
+	fmt.Fprintf(response, "Test, %s", urlVars["path"])
+}
+
+func testTodo(response http.ResponseWriter, request *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/todo.html"))
+	data := TodoPageData{
+	    PageTitle: "My TODO list",
+	    Todos: []Todo{
+	        {Title: "Task 1", Done: false},
+	        {Title: "Task 2", Done: true},
+	        {Title: "Task 3", Done: true},
+	    },
+	}
+	tmpl.Execute(response, data)
+}
 
 func main() {
 	STATIC_DIR := "static"
@@ -25,35 +53,9 @@ func main() {
 	router := mux.NewRouter()
 	testRouter := router.PathPrefix("/test").Subrouter()
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, you've test requested: %s\n", r.URL.Path)
-	})
-
-	testRouter.HandleFunc("", func(response http.ResponseWriter, request *http.Request) {
-		fmt.Fprintf(response, "Test, %s", request.URL.Path)
-	})
-
-	testRouter.HandleFunc("/todo", func(response http.ResponseWriter, request *http.Request) {
-		tmpl := template.Must(template.ParseFiles("templates/todo.html"))
-
-		data := TodoPageData{
-		    PageTitle: "My TODO list",
-		    Todos: []Todo{
-		        {Title: "Task 1", Done: false},
-		        {Title: "Task 2", Done: true},
-		        {Title: "Task 3", Done: true},
-		    },
-		}
-		tmpl.Execute(response, data)
-
-	})
-	router.HandleFunc("/{path}", func(response http.ResponseWriter, request *http.Request) {
-		urlVars := mux.Vars(request)
-		fmt.Fprintf(response, "404, could not find path: %s", urlVars["path"])
-	})
-
-	// fs := http.FileServer(http.Dir("static/"))
- 	//    router.Handle("/static/", http.StripPrefix("/static/", fs))
+	router.HandleFunc("/", logging(home))
+	testRouter.HandleFunc("/todo", logging(testTodo))
+	testRouter.HandleFunc("/{path}", logging(test404))
 
  	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(STATIC_DIR))))
 
