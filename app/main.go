@@ -2,27 +2,27 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"github.com/gorilla/mux"
+	"html/template"
 	"log"
 	"net/http"
 )
 
 type Todo struct {
 	Title string
-	Done bool
+	Done  bool
 }
 
 type TodoPageData struct {
-    PageTitle string
-    Todos     []Todo
+	PageTitle string
+	Todos     []Todo
 }
 
 func logging(f http.HandlerFunc) http.HandlerFunc {
-    return func(response http.ResponseWriter, request *http.Request) {
-        log.Println(request.URL.Path)
-        f(response, request)
-    }
+	return func(response http.ResponseWriter, request *http.Request) {
+		log.Println(request.URL.Path)
+		f(response, request)
+	}
 }
 
 func home(response http.ResponseWriter, request *http.Request) {
@@ -37,12 +37,12 @@ func test404(response http.ResponseWriter, request *http.Request) {
 func testTodo(response http.ResponseWriter, request *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/todo.html"))
 	data := TodoPageData{
-	    PageTitle: "My TODO list",
-	    Todos: []Todo{
-	        {Title: "Task 1", Done: false},
-	        {Title: "Task 2", Done: true},
-	        {Title: "Task 3", Done: true},
-	    },
+		PageTitle: "My TODO list",
+		Todos: []Todo{
+			{Title: "Task 1", Done: false},
+			{Title: "Task 2", Done: true},
+			{Title: "Task 3", Done: true},
+		},
 	}
 	tmpl.Execute(response, data)
 }
@@ -57,7 +57,7 @@ func main() {
 	testRouter.HandleFunc("/todo", logging(testTodo))
 	testRouter.HandleFunc("/{path}", logging(test404))
 
- 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(STATIC_DIR))))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(STATIC_DIR))))
 
 	http.ListenAndServe(":8080", router)
 }
