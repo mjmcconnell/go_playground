@@ -12,7 +12,6 @@ import (
 	"github.com/mjmcconnell/go_playground/base"
 )
 
-
 func (a *App) listView(w http.ResponseWriter, r *http.Request) {
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))

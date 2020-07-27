@@ -1,18 +1,17 @@
 package products
 
 import (
-	"os"
 	"database/sql"
 	"fmt"
-	"log"
 	"github.com/mjmcconnell/go_playground/base"
+	"log"
+	"os"
 )
 
 type App struct {
 	BaseApp *base.App
-	DB     *sql.DB
+	DB      *sql.DB
 }
-
 
 func (a *App) setupDB() {
 	host := os.Getenv("DATABASE_HOST")

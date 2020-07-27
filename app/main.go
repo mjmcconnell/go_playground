@@ -2,7 +2,6 @@
 
 package main
 
-
 import (
 	"github.com/mjmcconnell/go_playground/base"
 	"github.com/mjmcconnell/go_playground/products"

@@ -2,15 +2,15 @@ package base
 
 import (
 	"encoding/json"
-	"log"
-	"net/http"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"log"
+	"net/http"
 )
 
 // App represents the application
 type App struct {
-	Router *mux.Router
+	Router   *mux.Router
 	MyString string
 }
 
