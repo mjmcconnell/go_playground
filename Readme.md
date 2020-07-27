@@ -19,4 +19,5 @@ To start the webserver, simply run `make run` from the container.
   * This package is used to automatically reload the app on any changes to the Go files.
 * github.com/gorilla/mux
   * gorilla/mux is a common routing library, that allows easier access to route components
-
+* [github.com/golang-migrate/migrate](https://github.com/golang-migrate/migrate)
+  * Manages database migrations

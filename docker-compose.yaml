@@ -3,9 +3,40 @@ version: '3'
 services:
 
   web_server:
-    image: golang:1.12
+    image: golang:1.14
     volumes:
       - ./app:/go/src/github.com/mjmcconnell/go_playground
     ports:
       - 8080:8080
     working_dir: /go/src/github.com/mjmcconnell/go_playground
+    links:
+      - psql
+    depends_on:
+      - psql
+    environment:
+      DATABASE_HOST: psql
+      DATABASE_NAME: playground
+      DATABASE_USER: playground
+      DATABASE_PASSWORD: playground
+      DATABASE_SSL_MODE: disable
+    command: make run
+
+  migrations:
+    image: migrate/migrate
+    volumes:
+      - ./migrations:/migrations
+    links:
+      - psql
+    depends_on:
+      - psql
+    command: -path=/migrations/ -database postgres://playground:playground@psql:5432/playground?sslmode=disable up
+
+  psql:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_DB: playground
+      POSTGRES_USER: playground
+      POSTGRES_PASSWORD: playground
+    ports:
+      - 0.0.0.0:5432:5432
